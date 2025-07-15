@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 30rem; /* 480px */
+  --breakpoint-md: 40rem; /* 640px */
+  --breakpoint-lg: 67.5rem; /* 1080px */
+  --breakpoint-xl: 80rem; /* 1280px */
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-Medium.woff2") format("woff2"),
+    url("/fonts/Gilroy-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-MediumItalic.woff2") format("woff2"),
+    url("/fonts/Gilroy-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-Bold.woff2") format("woff2"),
+    url("/fonts/Gilroy-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-BoldItalic.woff2") format("woff2"),
+    url("/fonts/Gilroy-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-Black.woff2") format("woff2"),
+    url("/fonts/Gilroy-Black.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gilroy";
+  src: url("/fonts/Gilroy-BlackItalic.woff2") format("woff2"),
+    url("/fonts/Gilroy-BlackItalic.woff") format("woff");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-sans: "gilroy", sans-serif;
+}
