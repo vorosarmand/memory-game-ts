@@ -12,7 +12,7 @@ const configSlice = createSlice({
     setUsername(state, action) {
       return { ...state, username: action.payload };
     },
-    ellapseTime(state, action) {
+    ellapseTime(state) {
       return { ...state, ellapsed_time: state.ellapsed_time + 1 };
     },
     addPoints(state, action) {
