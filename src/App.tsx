@@ -99,6 +99,7 @@ function App() {
         isOpen={game.isGameFinished}
         onPlayAgain={handleResetGame}
         hasWon={game.matches === game.cards.length / 2}
+        username={config.username}
       />
     </main>
   );

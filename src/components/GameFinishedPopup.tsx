@@ -7,6 +7,7 @@ interface GameFinishedPopupProps {
   isOpen: boolean;
   onPlayAgain: () => void;
   hasWon: boolean;
+  username: string;
 }
 
 const IsolatedConfetti = memo(() => {
@@ -19,6 +20,7 @@ const GameFinishedPopup: FC<GameFinishedPopupProps> = ({
   isOpen,
   onPlayAgain,
   hasWon,
+  username,
 }) => {
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -35,7 +37,7 @@ const GameFinishedPopup: FC<GameFinishedPopupProps> = ({
     <Popup
       isOpen={isOpen}
       setIsOpen={() => null}
-      title={`${hasWon ? "Congrats! You won!" : "Sorry! You lost!"}`}
+      title={`${hasWon ? `Congrats ${username}! You won!` : `Sorry ${username}! You lost`}`}
       hideShowButton
     >
       <div className="relative flex flex-col gap-[15px]">
