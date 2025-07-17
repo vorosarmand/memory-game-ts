@@ -41,6 +41,7 @@ function App() {
               card2Type: card2.type,
               card1Id: card1.id,
               card2Id: card2.id,
+              allowed_bad_guesses: config.allowed_bad_guesses,
             }),
           );
         }, 500);

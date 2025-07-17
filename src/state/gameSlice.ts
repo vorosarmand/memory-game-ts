@@ -55,6 +55,7 @@ const gameSlice = createSlice({
         card2Type: animalEmojiType;
         card1Id: number;
         card2Id: number;
+        allowed_bad_guesses: number;
       }>,
     ) => {
       state.isCheckingMatch = true;
@@ -68,12 +69,18 @@ const gameSlice = createSlice({
 
         state.turnedCardIds = [];
 
+        console.log(state.mistakes, action.payload.allowed_bad_guesses);
+
         // Check for game finish
         if (state.matchedCardIds.length === state.cards.length) {
           state.isGameFinished = true;
         }
       } else {
         state.mistakes += 1;
+
+        if (state.mistakes === action.payload.allowed_bad_guesses) {
+          state.isGameFinished = true;
+        }
       }
     },
     clearTurnedCards: (state) => {
