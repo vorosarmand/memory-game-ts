@@ -1,4 +1,5 @@
 export interface IValidationInput {
-  value: string | number;
-  error: string | null;
+  key: string;
+  rule: any;
+  message: string;
 }
