@@ -120,7 +120,11 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           )}
         </div>
         <div className="relative flex flex-col gap-[15px]">
-          <Button text="Let's play!" onClick={handleStartGame} />
+          <Button
+            text="Let's play!"
+            onClick={handleStartGame}
+            disabled={!isValid}
+          />
         </div>
       </div>
     </Popup>
