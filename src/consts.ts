@@ -6,3 +6,6 @@ export const TOTAL_TIME_MAX = 99;
 
 export const NAME_MIN_LENGTH = 4;
 export const NAME_MAX_LENGTH = 16;
+
+export const ALLOWED_BAD_GUESSES_MIN = 0;
+export const ALLOWED_BAD_GUESSES_MAX = 99;

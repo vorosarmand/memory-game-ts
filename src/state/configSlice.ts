@@ -6,6 +6,7 @@ const configSlice = createSlice({
     username: "username",
     total_time: 60,
     number_of_cards: 12,
+    allowed_bad_guesses: 10,
   },
   reducers: {
     setUsername(state, action) {
@@ -17,9 +18,16 @@ const configSlice = createSlice({
     setNumberOfCards(state, action) {
       return { ...state, number_of_cards: action.payload };
     },
+    setAllowedBadGuesses(state, action) {
+      return { ...state, allowed_bad_guesses: action.payload };
+    },
   },
 });
 
-export const { setUsername, setTotalTime, setNumberOfCards } =
-  configSlice.actions;
+export const {
+  setUsername,
+  setTotalTime,
+  setNumberOfCards,
+  setAllowedBadGuesses,
+} = configSlice.actions;
 export default configSlice.reducer;

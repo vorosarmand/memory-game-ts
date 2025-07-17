@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "./Button";
 import Popup from "./Popup";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -6,10 +6,13 @@ import { resetGame, setGamePaused } from "../state/gameSlice";
 import {
   setNumberOfCards as setNumberOfCardsAction,
   setTotalTime as setTotalTimeAction,
+  setAllowedBadGuesses as setAllowedBadGuessesAction,
   setUsername,
 } from "../state/configSlice";
 import { IValidationInput } from "../types/IValidationInput";
 import {
+  ALLOWED_BAD_GUESSES_MAX,
+  ALLOWED_BAD_GUESSES_MIN,
   NAME_MAX_LENGTH,
   NAME_MIN_LENGTH,
   NUMBER_OF_PAIRS_MAX,
@@ -33,54 +36,69 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
   const config = useAppSelector((state) => state.config);
   const dispatch = useAppDispatch();
 
-  const [name, setName] = useState<IValidationInput>({
-    value: config.username,
-    error: null,
-  });
-  const [numberOfCards, setNumberOfCards] = useState<IValidationInput>({
-    value: config.number_of_cards,
-    error: null,
-  });
-  const [totalTime, setTotalTime] = useState<IValidationInput>({
-    value: config.total_time,
-    error: null,
+  const [data, setData] = useState({
+    name: config.username,
+    numberOfCards: config.number_of_cards,
+    totalTime: config.total_time,
+    allowedBadGuesses: config.allowed_bad_guesses,
   });
 
-  const handleSetName = (value: string) => {
-    setName({
-      value,
-      error:
-        value.length < NAME_MIN_LENGTH || value.length > NAME_MAX_LENGTH
-          ? `Name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`
-          : null,
-    });
+  const [error, setError] = useState({
+    name: null,
+    numberOfCards: null,
+    totalTime: null,
+    allowedBadGuesses: null,
+  });
+
+  const handleSetData = (key: string, value: number | string) => {
+    setData((prev) => ({ ...prev, [key]: value }));
+    handleSetError(key, value);
   };
 
-  const handleSetNumberOfCards = (value: number) => {
-    setNumberOfCards({
-      value,
-      error:
-        value < NUMBER_OF_PAIRS_MIN || value > NUMBER_OF_PAIRS_MAX
-          ? `Number of pairs must be between ${NUMBER_OF_PAIRS_MIN} and ${NUMBER_OF_PAIRS_MAX}`
-          : null,
-    });
-  };
+  useEffect(() => console.dir(error), [error]);
 
-  const handleSetTotalTime = (value: number) => {
-    setTotalTime({
-      value,
-      error:
-        value < TOTAL_TIME_MIN || value > TOTAL_TIME_MAX
-          ? `Total time must be between ${TOTAL_TIME_MIN} and ${TOTAL_TIME_MAX}`
-          : null,
-    });
+  const handleSetError = (key: string, value: number | string) => {
+    const validation = [
+      {
+        key: "name",
+        rule:
+          String(value).length < NAME_MIN_LENGTH ||
+          String(value).length > NAME_MAX_LENGTH,
+        message: `Name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`,
+      },
+      {
+        key: "numberOfCards",
+        rule:
+          Number(value) < NUMBER_OF_PAIRS_MIN ||
+          Number(value) > NUMBER_OF_PAIRS_MAX,
+        message: `Number of pairs must be between ${NUMBER_OF_PAIRS_MIN} and ${NUMBER_OF_PAIRS_MAX}`,
+      },
+      {
+        key: "totalTime",
+        rule: Number(value) < TOTAL_TIME_MIN || Number(value) > TOTAL_TIME_MAX,
+        message: `Total time must be between ${TOTAL_TIME_MIN} and ${TOTAL_TIME_MAX}`,
+      },
+      {
+        key: "allowedBadGuesses",
+        rule:
+          Number(value) < ALLOWED_BAD_GUESSES_MIN ||
+          Number(value) > ALLOWED_BAD_GUESSES_MAX,
+        message: `Allowed bad guesses must be between ${ALLOWED_BAD_GUESSES_MIN} and ${ALLOWED_BAD_GUESSES_MAX}`,
+      },
+    ];
+    const error = validation.find((v) => v.key === key && v.rule);
+    setError((prev) => ({
+      ...prev,
+      [key]: error ? error.message : null,
+    }));
   };
 
   const handleStartGame = () => {
-    dispatch(setNumberOfCardsAction(numberOfCards.value));
-    dispatch(setTotalTimeAction(totalTime.value));
-    dispatch(setUsername(name.value));
-    dispatch(resetGame(numberOfCards.value));
+    dispatch(setNumberOfCardsAction(data.numberOfCards));
+    dispatch(setTotalTimeAction(data.totalTime));
+    dispatch(setAllowedBadGuessesAction(data.allowedBadGuesses));
+    dispatch(setUsername(data.name));
+    dispatch(resetGame(data.numberOfCards));
     dispatch(setGamePaused(false));
     setIsOpen(false);
   };
@@ -104,9 +122,9 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           </label>
           <Input
             type="text"
-            value={name.value}
-            onChange={(e) => handleSetName(e.target.value)}
-            hasError={!!name.error}
+            value={data.name}
+            onChange={(e) => handleSetData("name", e.target.value)}
+            hasError={error.name !== null}
             className="w-[150px]"
           />
         </div>
@@ -116,9 +134,11 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           </label>
           <Input
             type="number"
-            value={numberOfCards.value}
-            onChange={(e) => handleSetNumberOfCards(Number(e.target.value))}
-            hasError={!!numberOfCards.error}
+            value={data.numberOfCards}
+            onChange={(e) =>
+              handleSetData("numberOfCards", Number(e.target.value))
+            }
+            hasError={error.numberOfCards !== null}
           />
         </div>
         <div className="flex items-center justify-between">
@@ -127,25 +147,30 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           </label>
           <Input
             type="number"
-            value={totalTime.value}
-            onChange={(e) => handleSetTotalTime(Number(e.target.value))}
-            hasError={!!totalTime.error}
+            value={data.totalTime}
+            onChange={(e) => handleSetData("totalTime", Number(e.target.value))}
+            hasError={error.totalTime !== null}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <label htmlFor="number_of_pairs" className="font-bold">
+            Allowed bad guesses
+          </label>
+          <Input
+            type="number"
+            value={data.allowedBadGuesses}
+            onChange={(e) =>
+              handleSetData("allowedBadGuesses", Number(e.target.value))
+            }
+            hasError={error.allowedBadGuesses !== null}
           />
         </div>
         <div className="flex w-full items-center justify-center">
-          {numberOfCards.error !== null ? (
+          {Object.values(error).find((v) => v !== null) && (
             <span className="text-md px-6 text-center font-black text-[#FF3F56]">
-              {numberOfCards.error}
+              {Object.values(error).find((v) => v !== null)}
             </span>
-          ) : totalTime.error !== null ? (
-            <span className="text-md px-6 text-center font-black text-[#FF3F56]">
-              {totalTime.error}
-            </span>
-          ) : name.error !== null ? (
-            <span className="text-md px-6 text-center font-black text-[#FF3F56]">
-              {name.error}
-            </span>
-          ) : null}
+          )}
         </div>
         <div className="relative flex flex-col gap-[15px]">
           <Button text="Let's play!" onClick={handleStartGame} />
