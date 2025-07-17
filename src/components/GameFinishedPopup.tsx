@@ -38,7 +38,7 @@ const GameFinishedPopup: FC<GameFinishedPopupProps> = ({
       isOpen={isOpen}
       setIsOpen={() => null}
       title={`${hasWon ? `Congrats ${username}! You won!` : `Sorry ${username}! You lost`}`}
-      hideShowButton
+      hideCloseButton
     >
       <div className="relative flex flex-col gap-[15px]">
         <Button text="Play again!" onClick={onPlayAgain} />

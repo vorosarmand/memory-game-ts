@@ -13,6 +13,8 @@ const gameSlice = createSlice({
     matches: 0,
     isCheckingMatch: false,
     isGameFinished: false,
+    isGamePaused: true,
+    isGameStarted: false,
   },
   reducers: {
     setCards(
@@ -68,7 +70,6 @@ const gameSlice = createSlice({
 
         // Check for game finish
         if (state.matchedCardIds.length === state.cards.length) {
-          console.log("finished");
           state.isGameFinished = true;
         }
       } else {
@@ -79,6 +80,9 @@ const gameSlice = createSlice({
       state.turnedCardIds = [];
       state.isCheckingMatch = false;
     },
+    setGamePaused: (state, action) => {
+      state.isGamePaused = action.payload;
+    },
     resetGame: (state, action) => {
       state.turnedCardIds = [];
       state.matchedCardIds = [];
@@ -87,6 +91,8 @@ const gameSlice = createSlice({
       state.matches = 0;
       state.isCheckingMatch = false;
       state.isGameFinished = false;
+      state.isGamePaused = false;
+      state.isGameStarted = true;
 
       const numberOfCards = action.payload;
       const cardTypes = shuffle(AnimalEmojis).slice(0, numberOfCards);
@@ -103,6 +109,7 @@ export const {
   ellapseTime,
   checkMatch,
   clearTurnedCards,
+  setGamePaused,
   resetGame,
 } = gameSlice.actions;
 export default gameSlice.reducer;

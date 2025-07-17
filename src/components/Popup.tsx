@@ -8,7 +8,7 @@ interface PopupProps {
   title: string;
   children: React.ReactNode;
   setIsOpen: (isOpen: boolean) => void;
-  hideShowButton?: boolean;
+  hideCloseButton?: boolean;
 }
 
 const Popup: FC<PopupProps> = ({
@@ -16,7 +16,7 @@ const Popup: FC<PopupProps> = ({
   title,
   children,
   setIsOpen,
-  hideShowButton = false,
+  hideCloseButton = false,
 }) => {
   return (
     <Dialog
@@ -28,11 +28,11 @@ const Popup: FC<PopupProps> = ({
       <DialogPanel className="w-full max-w-[300px] rounded-4xl bg-white">
         <div className="flex w-full items-center justify-between rounded-t-4xl bg-[#F5F5F5] p-[25px]">
           <h2
-            className={`text-2xl font-black ${hideShowButton ? "w-full text-center" : ""}`}
+            className={`text-2xl font-black ${hideCloseButton ? "w-full text-center" : ""}`}
           >
             {title}
           </h2>
-          {!hideShowButton && (
+          {!hideCloseButton && (
             <Button icon={faXmark} onClick={() => setIsOpen(false)} />
           )}
         </div>

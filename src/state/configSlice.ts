@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const configSlice = createSlice({
   name: "config",
   initialState: {
-    username: "default-username",
+    username: "username",
     total_time: 60,
     number_of_cards: 12,
   },

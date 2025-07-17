@@ -10,21 +10,19 @@ import {
   checkMatch,
   clearTurnedCards,
   resetGame,
+  setGamePaused,
   turnCard as turnCardAction,
 } from "./state/gameSlice";
 import { useAppDispatch, useAppSelector } from "./state/hooks";
+import { useMediaQuery } from "react-responsive";
 
 function App() {
   const config = useAppSelector((state) => state.config);
   const game = useAppSelector((state) => state.game);
+  const isLargeBreakpoint = useMediaQuery({ minWidth: 860 });
   const dispatch = useAppDispatch();
 
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  // Initialize cards
-  useEffect(() => {
-    dispatch(resetGame(config.number_of_cards));
-  }, []);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
 
   // Check for matches and mistakes
   useEffect(() => {
@@ -62,6 +60,11 @@ function App() {
     }
   };
 
+  const handleSettingsOpen = () => {
+    dispatch(setGamePaused(true));
+    setIsSettingsOpen(true);
+  };
+
   const handleResetGame = () => {
     dispatch(resetGame(config.number_of_cards));
   };
@@ -69,18 +72,25 @@ function App() {
   return (
     <main className="h-full w-full px-[50px] py-[30px]">
       <div className="m-auto w-full max-w-[1080px]">
-        <header className="flex h-60 w-full items-center justify-between">
-          <div>
-            <img src={logo} alt="memory game logo" />
+        <header className="mb-[30px] flex w-full flex-col items-center gap-5">
+          <div className="flex w-full items-center justify-between">
+            <div>
+              <img src={logo} alt="memory game logo" />
+            </div>
+            {isLargeBreakpoint && (
+              <div className="hidden lg:block">
+                <Timer />
+              </div>
+            )}
+            <div className="flex h-[44px] items-center gap-5">
+              <Button icon={faGear} onClick={handleSettingsOpen} />
+              <div className="h-full w-px bg-[#D5D5D5]"></div>
+              <Button icon={faRepeat} onClick={handleResetGame} />
+            </div>
           </div>
-          <Timer />
-          <div className="flex h-[44px] items-center gap-5">
-            <Button icon={faGear} onClick={() => setIsSettingsOpen(true)} />
-            <div className="h-full w-px bg-[#D5D5D5]"></div>
-            <Button icon={faRepeat} onClick={handleResetGame} />
-          </div>
+          {!isLargeBreakpoint && <Timer />}
         </header>
-        <div className="flex w-full flex-wrap justify-center gap-5 rounded-xl bg-[#F5F5F5] px-[30px] py-[35px] lg:px-[55px] lg:py-[50px]">
+        <div className="flex w-full flex-wrap justify-center gap-2.5 rounded-xl bg-[#F5F5F5] px-[30px] py-[35px] md:px-[55px] md:py-[50px] lg:gap-5">
           {game.cards.map((card) => (
             <Card
               key={card.id}
@@ -94,7 +104,11 @@ function App() {
           ))}
         </div>
       </div>
-      <SettingsPopup isOpen={isSettingsOpen} setIsOpen={setIsSettingsOpen} />
+      <SettingsPopup
+        isOpen={isSettingsOpen}
+        setIsOpen={setIsSettingsOpen}
+        hideCloseButton={game.isGameStarted !== true}
+      />
       <GameFinishedPopup
         isOpen={game.isGameFinished}
         onPlayAgain={handleResetGame}

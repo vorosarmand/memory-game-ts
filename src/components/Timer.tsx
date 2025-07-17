@@ -11,6 +11,7 @@ const Timer: FC<TimerProps> = ({}) => {
 
   // Start the timer
   useEffect(() => {
+    if (game.isGamePaused) return;
     const interval = setInterval(() => {
       dispatch(ellapseTime(config.total_time));
     }, 1000);
@@ -18,7 +19,7 @@ const Timer: FC<TimerProps> = ({}) => {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [dispatch, config.total_time, game.isGameFinished]);
+  }, [dispatch, config.total_time, game.isGameFinished, game.isGamePaused]);
 
   return (
     <div className="flex h-[65px]">

@@ -1,4 +1,4 @@
 export interface IValidationInput {
-  value: number;
+  value: string | number;
   error: string | null;
 }
