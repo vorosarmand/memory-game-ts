@@ -53,8 +53,6 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
     setIsOpen(false);
   };
 
-  useEffect(() => console.log(errors), [errors]);
-
   return (
     <Popup
       isOpen={isOpen}

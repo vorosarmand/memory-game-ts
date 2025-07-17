@@ -69,8 +69,6 @@ const gameSlice = createSlice({
 
         state.turnedCardIds = [];
 
-        console.log(state.mistakes, action.payload.allowed_bad_guesses);
-
         // Check for game finish
         if (state.matchedCardIds.length === state.cards.length) {
           state.isGameFinished = true;
